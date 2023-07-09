@@ -18,7 +18,7 @@ import dash.dependencies
 # In[2]:
 
 
-shopify_data = pd.read_csv('/src/shopify_df.csv')
+shopify_data = pd.read_csv('./src/shopify_df.csv')
 # exclude emails contain 'ever-eden.com'
 shopify_data = shopify_data[shopify_data['customer_email'].str.contains('ever-eden.com') == False]
 ############# note: Shopify Gross sales = net sales + discount + returns
