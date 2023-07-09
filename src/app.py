@@ -553,7 +553,7 @@ def update_new_retention_table(retention_selected_product):
 )
 
 def update_new_basket_analysis_table(selected_start_date, selected_end_date):
-    basket_data = pd.read_csv('/Users/apple/Desktop/Retention&LTV/shopify_df.csv')
+    basket_data = pd.read_csv('https://raw.githubusercontent.com/JessieYu3161/retention-ltv/main/src/shopify_df.csv')
     # exclude emails contain 'ever-eden.com'
     basket_data = basket_data[basket_data['customer_email'].str.contains('ever-eden.com') == False]
     basket_data = basket_data[(basket_data['product_type'] != 'GWP')&(basket_data['product_type'] != 'sample')&(basket_data['product_type'] != 'free_sample')&(basket_data['product_type'] != 'crm_sample')]
