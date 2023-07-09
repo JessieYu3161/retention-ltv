@@ -8,9 +8,9 @@ import pandas as pd
 import numpy as np
 from datetime import date
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
-import dash_table
+from dash import dcc
+from dash import html
+from dash import dash_table
 from jupyter_dash import JupyterDash
 import dash.dependencies
 
@@ -18,7 +18,7 @@ import dash.dependencies
 # In[2]:
 
 
-shopify_data = pd.read_csv('/Users/apple/Desktop/Dash/src/shopify_df.csv')
+shopify_data = pd.read_csv('/src/shopify_df.csv')
 # exclude emails contain 'ever-eden.com'
 shopify_data = shopify_data[shopify_data['customer_email'].str.contains('ever-eden.com') == False]
 ############# note: Shopify Gross sales = net sales + discount + returns
