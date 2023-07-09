@@ -277,6 +277,7 @@ max_date = date.today().strftime("%Y-%m-%d")
 
 # Create the JupyterDash app
 app = JupyterDash(__name__)
+server = app.server
 
 # Define the layout
 app.layout = html.Div(
