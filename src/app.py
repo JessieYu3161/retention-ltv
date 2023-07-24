@@ -44,6 +44,7 @@ shopify_data = shopify_data[~shopify_data['product_title'].isin(remove_product)]
 # edit to universal product title
 shopify_data.loc[shopify_data['product_title'] == 'Baby  Lip Balm', 'product_title'] = 'Baby Lip Balm'
 shopify_data.loc[shopify_data['product_title'] == 'Lip Balm', 'product_title'] = 'Baby Lip Balm'
+shopify_data.loc[shopify_data['product_title'] == 'Nourishing Lip Balm', 'product_title'] = 'Baby Lip Balm'
 
 shopify_data.loc[shopify_data['product_title'] == 'Baby Moisturizing Lotion Fragrance Free', 'product_title'] = 'Baby Moisturizing Lotion'
 shopify_data.loc[shopify_data['product_title'] == 'Baby Moisturizing Lotion Light Cucumber', 'product_title'] = 'Baby Moisturizing Lotion'
@@ -138,16 +139,16 @@ shopify_data.loc[shopify_data['product_title'] == 'SPF 50 Super-Sheer Premium Mi
 # In[3]:
 
 
-def purchase_rate(customer_id):
+def purchase_rate(customer_id, day):
     purchase_rate = [1]
-    counter = 1
-    for i in range(1,len(customer_id)):
-          if customer_id[i] != customer_id[i-1]:
-                 purchase_rate.append(1)
-                 counter = 1
-          else:
-                 counter += 1
-                 purchase_rate.append(counter)
+    for i in range(1, len(customer_id)):
+        if customer_id[i] == customer_id[i - 1]:
+            if day[i] == day[i - 1]:
+                purchase_rate.append(purchase_rate[-1])
+            else:
+                purchase_rate.append(purchase_rate[-1] + 1)
+        else:
+            purchase_rate.append(1)
     return purchase_rate
 def join_date(date, purchase_rate):
     join_date = list(range(len(date)))
@@ -181,7 +182,7 @@ final = final.sort_values(['customer_id', 'day'])
 final.reset_index(inplace=True, drop=True)
 
 final['month'] = pd.to_datetime(final['day']).dt.month
-final['Purchase Rate'] = purchase_rate(final['customer_id'])
+final['Purchase Rate'] = purchase_rate(final['customer_id'], final['day'])
 final['Join Date'] = join_date(final['day'], final['Purchase Rate'])
 final['Join Date'] = pd.to_datetime(final['Join Date'], dayfirst=True)
 final['cohort'] = pd.to_datetime(final['Join Date']).dt.strftime('%Y-%m')
@@ -238,6 +239,40 @@ for i in range(len(retention_cum_percentage.columns)-1):
 retention_cum_percentage[0] = retention_cum_percentage[0]
 
 
+# # Retention - in Cumulative number by cohort [Unique Customers]
+final_unique = final[final['Purchase Rate'] == 2]
+final_unique_cohorts = final_unique.groupby(['cohort', 'Age by month']).nunique()
+final_unique_cohorts = final_unique_cohorts.customer_id.to_frame().reset_index()
+final_unique_cohorts = pd.pivot_table(final_unique_cohorts, values='customer_id', index='cohort', columns='Age by month')
+
+unique_retention_absolute = final_unique_cohorts.replace(np.nan, '', regex=True)
+unique_retention_absolute['New Customer'] = final.groupby(['cohort']).nunique().customer_id.to_frame().reset_index()['customer_id'].values
+first_column = unique_retention_absolute.pop('New Customer')
+unique_retention_absolute.insert(0, 'New Customer', first_column)
+unique_retention_absolute['New Customer'] = unique_retention_absolute['New Customer'].astype(float)
+unique_retention_absolute[0] = unique_retention_absolute[0].astype(str)
+unique_retention_absolute = unique_retention_absolute.apply(pd.to_numeric, errors='coerce')
+unique_retention_absolute = unique_retention_absolute.replace(np.nan, 0, regex=True)
+
+
+column_index = unique_retention_absolute.columns.get_loc(25)
+unique_retention_absolute = unique_retention_absolute.iloc[:, :column_index]
+unique_retention_absolute
+
+retention_cumulative_unique = unique_retention_absolute.apply(pd.to_numeric, errors='coerce').copy()
+for i in range(2, retention_cumulative_unique.shape[1]):
+    retention_cumulative_unique.iloc[:, i] = retention_cumulative_unique.iloc[:, i].add(retention_cumulative_unique.iloc[:, i-1], fill_value=0)
+
+
+# # Retention - in Cumulative percentage by cohort [Unique Customers]
+
+retention_cum_percentage_unique = retention_cumulative_unique.copy()
+for i in range(-1,len(retention_cum_percentage_unique.columns)-2):
+    retention_cum_percentage_unique[i+1] = retention_cum_percentage_unique[i+1] / retention_cum_percentage_unique['New Customer']
+    retention_cum_percentage_unique[i+1] = retention_cum_percentage_unique[i+1].map('{:.2%}'.format)
+retention_cum_percentage_unique['New Customer'] = retention_cum_percentage_unique['New Customer']
+
+
 # # LTV by cohort
 
 # In[9]:
@@ -280,7 +315,27 @@ app = JupyterDash(__name__)
 server = app.server
 
 # Define the layout
-app.layout = html.Div(
+login_layout = html.Div(
+    id = "login-container",
+    children=[
+        html.H2("Login Page"),
+        html.Div(
+            children=[
+                html.Label("Username"),
+                dcc.Input(id="username-input", type="text", placeholder="Enter your username"),
+                html.Label("Password"),
+                dcc.Input(id="password-input", type="password", placeholder="Enter your password"),
+                html.Button("Login", id="login-button", n_clicks=0),
+                html.Div(id="output-message")
+            ],
+            style={"width": "300px", "margin": "auto", "margin-top": "50px"}
+        )
+    ]
+)
+
+
+dashboard_layout = html.Div(
+    id = "dashboard-container",
     children=[
         html.H1("Shopify Customer Retention and LTV Dashboard"),
         dcc.Tabs(id='tabs', value='cohort-tab', children=[
@@ -291,8 +346,33 @@ app.layout = html.Div(
             dcc.Tab(label='Basket Analysis', value='basket-analysis')
         ]),
         html.Div(id='tab-content')
-    ]
+    ],
+    style = {'display':'none'}
 )
+
+app.layout = html.Div([login_layout, dashboard_layout])
+
+@app.callback(
+    dash.dependencies.Output("dashboard-container", "style"),
+    dash.dependencies.Output("login-container", "style"),
+    dash.dependencies.Output("output-message", "children"),
+    dash.dependencies.Input("login-button", "n_clicks"),
+    dash.dependencies.State("username-input", "value"),
+    dash.dependencies.State("password-input", "value")
+)
+def login(n_clicks, username, password):
+    if n_clicks > 0:
+        # Check if the username and password are correct
+        if username == "jessie@ever-eden.com" and password == "Evereden2023!":
+            # Hide the login container and show the dashboard container
+            return {"display": "block"}, {"display": "none"}, ""
+        else:
+            # Show the login container and display an error message
+            return {"display": "none"}, {"display": "block"}, "Login failed. Please try again."
+
+    return {"display": "none"}, {"display": "block"}, ""
+
+
 
 @app.callback(
     dash.dependencies.Output('tab-content', 'children'),
@@ -338,6 +418,26 @@ def render_content(tab):
                     id='retention-cum-percentage-table',
                     columns=[{"name": "Cohort", "id": "cohort"}] + [{"name": str(col), "id": str(col)} for col in retention_cum_percentage.columns],
                     data=retention_cum_percentage.reset_index().to_dict('records'),
+                    style_table={'overflowX': 'scroll'},
+                    style_cell={'minWidth': '100px', 'width': '100px', 'maxWidth': '100px', 'textAlign': 'center'}
+                )
+            ]),
+            html.Div([
+                html.H3("Retention Rate in Cumulative Value [Unique Customer]"),
+                dash_table.DataTable(
+                    id='retention-cum-unique-table',
+                    columns=[{"name": "Cohort", "id": "cohort"}] + [{"name": str(col), "id": str(col)} for col in retention_cumulative_unique.columns],
+                    data=retention_cumulative_unique.reset_index().to_dict('records'),
+                    style_table={'overflowX': 'scroll'},
+                    style_cell={'minWidth': '100px', 'width': '100px', 'maxWidth': '100px', 'textAlign': 'center'}
+                )
+            ]),
+            html.Div([
+                html.H3("Retention Rate in Cumulative Percentage [Unique Customer]"),
+                dash_table.DataTable(
+                    id='retention-cum-percentage-unique-table',
+                    columns=[{"name": "Cohort", "id": "cohort"}] + [{"name": str(col), "id": str(col)} for col in retention_cum_percentage_unique.columns],
+                    data=retention_cum_percentage_unique.reset_index().to_dict('records'),
                     style_table={'overflowX': 'scroll'},
                     style_cell={'minWidth': '100px', 'width': '100px', 'maxWidth': '100px', 'textAlign': 'center'}
                 )
@@ -407,7 +507,7 @@ def update_new_ltv_table(ltv_selected_product):
     ltv_by_product = ltv_by_product.sort_values(['customer_id','day'])
     ltv_by_product.reset_index(inplace = True, drop = True)
     ltv_by_product['month'] =pd.to_datetime(ltv_by_product['day']).dt.month
-    ltv_by_product['Purchase Rate'] = purchase_rate(ltv_by_product['customer_id'])
+    ltv_by_product['Purchase Rate'] = purchase_rate(ltv_by_product['customer_id'], ltv_by_product['day'])
     ltv_by_product['Join Date'] = join_date(ltv_by_product['day'], ltv_by_product['Purchase Rate'])
     ltv_by_product['Join Date'] = pd.to_datetime(ltv_by_product['Join Date'], dayfirst=True)
     ltv_by_product['cohort'] = pd.to_datetime(ltv_by_product['Join Date']).dt.strftime('%Y-%m')
@@ -460,7 +560,7 @@ def update_new_retention_table(retention_selected_product):
     retention_by_product = retention_by_product.sort_values(['customer_id','day'])
     retention_by_product.reset_index(inplace = True, drop = True)
     retention_by_product['month'] =pd.to_datetime(retention_by_product['day']).dt.month
-    retention_by_product['Purchase Rate'] = purchase_rate(retention_by_product['customer_id'])
+    retention_by_product['Purchase Rate'] = purchase_rate(retention_by_product['customer_id'],retention_by_product['day'])
     retention_by_product['Join Date'] = join_date(retention_by_product['day'], retention_by_product['Purchase Rate'])
     retention_by_product['Join Date'] = pd.to_datetime(retention_by_product['Join Date'], dayfirst=True)
     retention_by_product['cohort'] = pd.to_datetime(retention_by_product['Join Date']).dt.strftime('%Y-%m')
@@ -531,7 +631,41 @@ def update_new_retention_table(retention_selected_product):
             style_table={'overflowX': 'scroll'},
             style_cell={'minWidth': '100px', 'width': '100px', 'maxWidth': '100px', 'textAlign': 'center'}
         ) 
+     #######
     
+    
+    retention_by_product_unique = retention_by_product[retention_by_product['Purchase Rate'] == 2]
+    retention_by_product_cohorts = retention_by_product_unique.groupby(['cohort', 'Age by month']).nunique()
+    retention_by_product_cohorts = retention_by_product_cohorts.customer_id.to_frame().reset_index()
+    retention_by_product_cohorts = pd.pivot_table(retention_by_product_cohorts, values='customer_id', index='cohort', columns='Age by month')
+
+    unique_retention_product_absolute = retention_by_product_cohorts.replace(np.nan, '', regex=True)
+    unique_retention_product_absolute['New Customer'] = retention_by_product.groupby(['cohort']).nunique().customer_id.to_frame().reset_index()['customer_id'].values
+    first_column = unique_retention_product_absolute.pop('New Customer')
+    unique_retention_product_absolute.insert(0, 'New Customer', first_column)
+    unique_retention_product_absolute['New Customer'] = unique_retention_product_absolute['New Customer'].astype(float)
+    unique_retention_product_absolute[0] = unique_retention_product_absolute[0].astype(str)
+    unique_retention_product_absolute = unique_retention_product_absolute.apply(pd.to_numeric, errors='coerce')
+    unique_retention_product_absolute = unique_retention_product_absolute.replace(np.nan, 0, regex=True)
+
+    retention_cumulative_product_unique = unique_retention_product_absolute.apply(pd.to_numeric, errors='coerce').copy()
+    for i in range(2, retention_cumulative_product_unique.shape[1]):
+        retention_cumulative_product_unique.iloc[:, i] = retention_cumulative_product_unique.iloc[:, i].add(retention_cumulative_product_unique.iloc[:, i-1], fill_value=0)
+    
+    retention_cum_per_product_unique = retention_cumulative_product_unique.copy()
+    for i in range(1, len(retention_cum_per_product_unique.columns)):
+        retention_cum_per_product_unique.iloc[:, i] = retention_cum_per_product_unique.iloc[:, i]/ retention_cum_per_product_unique['New Customer']
+    retention_cum_per_product_unique.iloc[:, 1:] = retention_cum_per_product_unique.iloc[:, 1:].applymap(lambda x: '{:.2%}'.format(x) if pd.notnull(x) else '')
+    retention_cum_per_product_unique['New Customer'] = retention_cumulative_product_unique['New Customer'].values
+
+    ########
+    
+    retention_cum_per_unique_tb = dash_table.DataTable(
+            data=retention_cum_per_product_unique.reset_index().to_dict('records'),
+            columns=[{"name": "Cohort", "id": "cohort"}] + [{"name": str(col), "id": str(col)} for col in retention_cum_per_product_unique.columns],
+            style_table={'overflowX': 'scroll'},
+            style_cell={'minWidth': '100px', 'width': '100px', 'maxWidth': '100px', 'textAlign': 'center'}
+        )     
 
     return html.Div([html.H3("In Absolute Value"),
                      retention_abs_tb, 
@@ -543,8 +677,12 @@ def update_new_retention_table(retention_selected_product):
                      retention_cum_tb,
                      html.Hr(),
                      html.H3("In Cumulative Percentage"),
-                     retention_cum_per_tb
+                     retention_cum_per_tb,
+                     html.Hr(),
+                     html.H3("In Cumulative Percentage [Unique Customer]"),
+                     retention_cum_per_unique_tb
                     ])
+
 
 @app.callback(
     dash.dependencies.Output('basket-analysis-content', 'children'),
