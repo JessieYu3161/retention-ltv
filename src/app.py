@@ -694,6 +694,8 @@ def update_new_basket_analysis_table(selected_start_date, selected_end_date):
     basket_data = pd.read_csv('https://raw.githubusercontent.com/JessieYu3161/retention-ltv/main/src/shopify_df.csv')
     # exclude emails contain 'ever-eden.com'
     basket_data = basket_data[basket_data['customer_email'].str.contains('ever-eden.com') == False]
+    basket_data = basket_data[basket_data['product_title'].str.contains('Mini') == False]
+    basket_data.loc[basket_data['product_title'] == 'Nourishing Lip Balm', 'product_title'] = 'Baby Lip Balm'
     basket_data = basket_data[(basket_data['product_type'] != 'GWP')&(basket_data['product_type'] != 'sample')&(basket_data['product_type'] != 'free_sample')&(basket_data['product_type'] != 'crm_sample')]
     basket_data = basket_data[basket_data['product_title'] != 'Exclusive Beauty Bag']
     basket_data = basket_data[basket_data['gross_sales']>0]
