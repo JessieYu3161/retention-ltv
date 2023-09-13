@@ -23,7 +23,7 @@ shopify_data = pd.read_csv('https://raw.githubusercontent.com/JessieYu3161/reten
 shopify_data = shopify_data[shopify_data['customer_email'].str.contains('ever-eden.com') == False]
 ############# note: Shopify Gross sales = net sales + discount + returns
 # define sales = gross sales - returns
-shopify_data['sales'] = shopify_data['gross_sales'] - shopify_data['returns']
+shopify_data['sales'] = shopify_data['gross_sales'] + shopify_data['returns']
 shopify_data = shopify_data[(shopify_data['orders'] > 0) & (shopify_data['sales'] > 0)]
 shopify_data['product_title'] = shopify_data['product_title'].astype(str)
 shopify_data = shopify_data[['day', 'customer_id', 'customer_type', 'sales', 'product_title']]
@@ -134,6 +134,8 @@ shopify_data.loc[shopify_data['product_title'] == 'Soothing Belly Mask Collectio
 shopify_data.loc[shopify_data['product_title'] == 'Special Delivery Discovery Set', 'product_title'] = 'Special Delivery Discovery Kit'
 
 shopify_data.loc[shopify_data['product_title'] == 'SPF 50 Super-Sheer Premium Mineral Sunscreen', 'product_title'] = 'SPF 50 Premium Mineral Sunscreen'
+
+shopify_data.loc[shopify_data['product_title'] == 'Jumbo-Sized Soothing Baby Massage Oil', 'product_title'] = 'Jumbo Soothing Baby Massage Oil'
 
 
 # In[3]:
@@ -633,20 +635,16 @@ def update_new_retention_table(retention_selected_product):
         ) 
      #######
     
-    
     retention_by_product_unique = retention_by_product[retention_by_product['Purchase Rate'] == 2]
     retention_by_product_cohorts = retention_by_product_unique.groupby(['cohort', 'Age by month']).nunique()
     retention_by_product_cohorts = retention_by_product_cohorts.customer_id.to_frame().reset_index()
     retention_by_product_cohorts = pd.pivot_table(retention_by_product_cohorts, values='customer_id', index='cohort', columns='Age by month')
 
     unique_retention_product_absolute = retention_by_product_cohorts.replace(np.nan, '', regex=True)
-    unique_retention_product_absolute['New Customer'] = retention_by_product.groupby(['cohort']).nunique().customer_id.to_frame().reset_index()['customer_id'].values
-    first_column = unique_retention_product_absolute.pop('New Customer')
-    unique_retention_product_absolute.insert(0, 'New Customer', first_column)
-    unique_retention_product_absolute['New Customer'] = unique_retention_product_absolute['New Customer'].astype(float)
-    unique_retention_product_absolute[0] = unique_retention_product_absolute[0].astype(str)
-    unique_retention_product_absolute = unique_retention_product_absolute.apply(pd.to_numeric, errors='coerce')
-    unique_retention_product_absolute = unique_retention_product_absolute.replace(np.nan, 0, regex=True)
+    new_c = retention_by_product.groupby(['cohort']).nunique().customer_id.to_frame().reset_index()
+    unique_retention_product_absolute = pd.merge(new_c, unique_retention_product_absolute, how = 'left', on = 'cohort').fillna(0)
+    unique_retention_product_absolute.rename(columns={'customer_id':'New Customer'}, inplace=True)
+    unique_retention_product_absolute = unique_retention_product_absolute.set_index(unique_retention_product_absolute.columns[0])
 
     retention_cumulative_product_unique = unique_retention_product_absolute.apply(pd.to_numeric, errors='coerce').copy()
     for i in range(2, retention_cumulative_product_unique.shape[1]):
@@ -696,6 +694,7 @@ def update_new_basket_analysis_table(selected_start_date, selected_end_date):
     basket_data = basket_data[basket_data['customer_email'].str.contains('ever-eden.com') == False]
     basket_data = basket_data[basket_data['product_title'].str.contains('Mini') == False]
     basket_data.loc[basket_data['product_title'] == 'Nourishing Lip Balm', 'product_title'] = 'Baby Lip Balm'
+    basket_data.loc[basket_data['product_title'] == 'Jumbo-Sized Soothing Baby Massage Oil', 'product_title'] = 'Jumbo Soothing Baby Massage Oil'
     basket_data = basket_data[(basket_data['product_type'] != 'GWP')&(basket_data['product_type'] != 'sample')&(basket_data['product_type'] != 'free_sample')&(basket_data['product_type'] != 'crm_sample')]
     basket_data = basket_data[basket_data['product_title'] != 'Exclusive Beauty Bag']
     basket_data = basket_data[basket_data['gross_sales']>0]
