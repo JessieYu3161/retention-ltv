@@ -38,104 +38,141 @@ remove_product = ['Copy of Soothing Baby Massage Oil', 'Exclusive Beauty Bag', '
                  'WIP Test - NEW LOOK Soothing Baby Massage Oil','WIP Test - Nourishing Stretch Mark Cream','WIP Test - Premium Mineral Sunscreen SPF 30',
                  'Old - Baby Shampoo and Body Wash','Old - Lifting and Firming Lotion','Old - Multi-Purpose Healing Balm',
                  'Old - Nourishing Stretch Mark Cream','Old - Outdoors Essentials','Old - Premium Mineral Sunscreen SPF 30',
-                 'Old - Soothing Baby Massage Oil','Old - Soothing Belly Mask']
+                 'Old - Soothing Baby Massage Oil','Old - Soothing Belly Mask', '.', 'KP001', 'OT001', 'SS005', 'SS008','Soy Wax Candle', 'Compact Mirror',
+                 'Kids Fantasy Face Gems', 'Kids Hair Brush', 'Luxe Vegan Leather Gift Bag', 'Pencil case & Puffy stickers', 'Water Bottle', 'Luxury Vegan Leather Gift Bag',
+                 'Pencil case', 'Puffy Stickers', 'Pencil case & puffy stickers Set', 'Travel Bag', 'Luxe Baby Hair Brush', 'Fantasy Face Gems', 'Big Brown Bear Boots', 'Coterie Diaper Trial Pack']
 shopify_data = shopify_data[~shopify_data['product_title'].isin(remove_product)]
 
 # edit to universal product title
 shopify_data.loc[shopify_data['product_title'] == 'Baby  Lip Balm', 'product_title'] = 'Baby Lip Balm'
 shopify_data.loc[shopify_data['product_title'] == 'Lip Balm', 'product_title'] = 'Baby Lip Balm'
-shopify_data.loc[shopify_data['product_title'] == 'Nourishing Lip Balm', 'product_title'] = 'Baby Lip Balm'
-
 shopify_data.loc[shopify_data['product_title'] == 'Baby Moisturizing Lotion Fragrance Free', 'product_title'] = 'Baby Moisturizing Lotion'
 shopify_data.loc[shopify_data['product_title'] == 'Baby Moisturizing Lotion Light Cucumber', 'product_title'] = 'Baby Moisturizing Lotion'
 shopify_data.loc[shopify_data['product_title'] == 'Baby Moisturizing Lotion Light Jasmine', 'product_title'] = 'Baby Moisturizing Lotion'
-
 shopify_data.loc[shopify_data['product_title'] == 'Baby Moisturizing Lotion Deluxe Mini', 'product_title'] = 'Baby Moisturizing Lotion Mini'
 shopify_data.loc[shopify_data['product_title'] == 'Baby Moisturizing Lotion Fragrance Free - Mini', 'product_title'] = 'Baby Moisturizing Lotion Mini'
 shopify_data.loc[shopify_data['product_title'] == 'Mini Fragrance-Free Baby Lotion', 'product_title'] = 'Baby Moisturizing Lotion Mini'
-
 shopify_data.loc[shopify_data['product_title'] == 'Baby Shampoo and Body Wash Deluxe Mini', 'product_title'] = 'Baby Shampoo and Body Wash - Mini'
 shopify_data.loc[shopify_data['product_title'] == 'GBOS + GBS', 'product_title'] = 'Belly Serum Experience Set'
-
 shopify_data.loc[shopify_data['product_title'] == 'Cleanse and Nourish Routine Bundle', 'product_title'] = 'Cleanse and Nourish Bundle'
-
 shopify_data.loc[shopify_data['product_title'] == 'Complete Baby Care Gift Set', 'product_title'] = 'Complete Baby Gift Bundle'
-
 shopify_data.loc[shopify_data['product_title'] == 'Golden Belly Serum - Mini', 'product_title'] = 'Golden Belly Serum Mini'
-
 shopify_data.loc[shopify_data['product_title'] == 'Kids Daily 1-2-3 Routine Set', 'product_title'] = 'Kids Daily 1-2-3 Routine'
-
 shopify_data.loc[shopify_data['product_title'] == 'Kids Happy Face Duo Set', 'product_title'] = 'Kids Happy Face Duo'
-
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Body Lotion Cool Peach', 'product_title'] = 'Kids Multi-Vitamin Body Lotion'
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Body Lotion Fresh Pomelo', 'product_title'] = 'Kids Multi-Vitamin Body Lotion'
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Body Lotion Melon', 'product_title'] = 'Kids Multi-Vitamin Body Lotion'
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Body Lotion Melon Juice', 'product_title'] = 'Kids Multi-Vitamin Body Lotion'
-
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Body Wash Cool Peach', 'product_title'] = 'Kids Multi-Vitamin Body Wash'
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Body Wash Fresh Pomelo', 'product_title'] = 'Kids Multi-Vitamin Body Wash'
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Body Wash Melon Juice', 'product_title'] = 'Kids Multi-Vitamin Body Wash'
-
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Face Cream Cool Peach', 'product_title'] = 'Kids Multi-Vitamin Face Cream'
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Face Cream Fresh Pomelo', 'product_title'] = 'Kids Multi-Vitamin Face Cream'
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Face Cream Melon Juice', 'product_title'] = 'Kids Multi-Vitamin Face Cream'
-
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Face Cream Cool Peach Mini', 'product_title'] = 'Kids Multi-Vitamin Face Cream Mini'
 shopify_data.loc[shopify_data['product_title'] == 'Mini Kids Multi-Vitamin Face Cream Melon Juice', 'product_title'] = 'Kids Multi-Vitamin Face Cream Mini'
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Face Cream Melon Juice - Mini', 'product_title'] = 'Kids Multi-Vitamin Face Cream Mini'
-
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Face Wash Cool Peach', 'product_title'] = 'Kids Multi-Vitamin Face Wash'
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Face Wash Fresh Pomelo', 'product_title'] = 'Kids Multi-Vitamin Face Wash'
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Face Wash Melon Juice', 'product_title'] = 'Kids Multi-Vitamin Face Wash'
-
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Face Wash Peach - Mini', 'product_title'] = 'Kids Multi-Vitamin Face Wash Mini'
 shopify_data.loc[shopify_data['product_title'] == 'Mini Kids Multi-Vitamin Face Wash', 'product_title'] = 'Kids Multi-Vitamin Face Wash Mini'
 shopify_data.loc[shopify_data['product_title'] == 'Mini Kids Multi-Vitamin Face Wash Melon', 'product_title'] = 'Kids Multi-Vitamin Face Wash Mini'
 shopify_data.loc[shopify_data['product_title'] == 'Mini Kids Multi-Vitamin Face Wash Peach', 'product_title'] = 'Kids Multi-Vitamin Face Wash Mini'
-
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Shampoo & Conditioner Cool Peach', 'product_title'] = 'Kids Multi-Vitamin Shampoo & Conditioner'
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Shampoo & Conditioner Fresh Pomelo', 'product_title'] = 'Kids Multi-Vitamin Shampoo & Conditioner'
 shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Shampoo & Conditioner Melon Juice', 'product_title'] = 'Kids Multi-Vitamin Shampoo & Conditioner'
-
-shopify_data.loc[shopify_data['product_title'] == 'Luxury Vegan Leather Gift Bag', 'product_title'] = 'Luxe Vegan Leather Gift Bag'
-
 shopify_data.loc[shopify_data['product_title'] == 'Nourishing Baby Face Cream Cotton Dew', 'product_title'] = 'Nourishing Baby Face Cream'
 shopify_data.loc[shopify_data['product_title'] == 'Nourishing Baby Face Cream Tea Meadow', 'product_title'] = 'Nourishing Baby Face Cream'
-
 shopify_data.loc[shopify_data['product_title'] == 'Mini Nourishing Baby Face Cream', 'product_title'] = 'Nourishing Baby Face Cream - Mini'
 shopify_data.loc[shopify_data['product_title'] == 'Nourishing Baby Face Cream Mini', 'product_title'] = 'Nourishing Baby Face Cream - Mini'
 shopify_data.loc[shopify_data['product_title'] == 'Nourishing Baby Face Cream Mini 10 ml', 'product_title'] = 'Nourishing Baby Face Cream - Mini'
-
 shopify_data.loc[shopify_data['product_title'] == 'Nourishing Stretch Mark Cream - Mini', 'product_title'] = 'Nourishing Stretch Mark Cream Mini'
-
-shopify_data.loc[shopify_data['product_title'] == 'Pencil case', 'product_title'] = 'Pencil case & Puffy stickers'
-shopify_data.loc[shopify_data['product_title'] == 'Puffy Stickers', 'product_title'] = 'Pencil case & Puffy stickers'
-shopify_data.loc[shopify_data['product_title'] == 'Pencil case & puffy stickers Set', 'product_title'] = 'Pencil case & Puffy stickers'
-
 shopify_data.loc[shopify_data['product_title'] == 'Petit Bouquet Postpartum Belly Serum', 'product_title'] = 'Petit Bouquet Belly Serum'
-
 shopify_data.loc[shopify_data['product_title'] == 'Premium Mineral Sunscreen SPF 30', 'product_title'] = 'Premium Mineral Sunscreen SPF30'
 shopify_data.loc[shopify_data['product_title'] == 'Protecting Baby Face Cream - No 2. Silk Cream', 'product_title'] = 'Protecting Baby Face Cream'
 shopify_data.loc[shopify_data['product_title'] == 'Scented Bubble Trio', 'product_title'] = 'Scented Bubble Bundle'
-
 shopify_data.loc[shopify_data['product_title'] == 'Soothing Baby Massage Oil  Cotton Dew', 'product_title'] = 'Soothing Baby Massage Oil'
 shopify_data.loc[shopify_data['product_title'] == 'Soothing Baby Massage Oil  Warm Blossom', 'product_title'] = 'Soothing Baby Massage Oil'
 shopify_data.loc[shopify_data['product_title'] == 'Soothing Baby Massage Oil Cotton Dew', 'product_title'] = 'Soothing Baby Massage Oil'
 shopify_data.loc[shopify_data['product_title'] == 'Soothing Baby Massage Oil Morning Breeze', 'product_title'] = 'Soothing Baby Massage Oil'
 shopify_data.loc[shopify_data['product_title'] == 'Soothing Baby Massage Oil Warm Blossom', 'product_title'] = 'Soothing Baby Massage Oil'
 shopify_data.loc[shopify_data['product_title'] == 'Baby Massage Oil', 'product_title'] = 'Soothing Baby Massage Oil'
-
 shopify_data.loc[shopify_data['product_title'] == 'Soothing Baby Massage Oil Deluxe Mini', 'product_title'] = 'Soothing Baby Massage Oil - Mini'
-
 shopify_data.loc[shopify_data['product_title'] == 'Soothing Belly Mask - 4 Sheets', 'product_title'] = 'Soothing Belly Mask'
 shopify_data.loc[shopify_data['product_title'] == 'Soothing Belly Mask 1-sheet', 'product_title'] = 'Soothing Belly Mask'
 shopify_data.loc[shopify_data['product_title'] == 'Soothing Belly Mask Collection', 'product_title'] = 'Soothing Belly Mask'
-
 shopify_data.loc[shopify_data['product_title'] == 'Special Delivery Discovery Set', 'product_title'] = 'Special Delivery Discovery Kit'
-
 shopify_data.loc[shopify_data['product_title'] == 'SPF 50 Super-Sheer Premium Mineral Sunscreen', 'product_title'] = 'SPF 50 Premium Mineral Sunscreen'
-
+shopify_data.loc[shopify_data['product_title'] == 'Nourishing Lip Balm', 'product_title'] = 'Baby Lip Balm'
+shopify_data.loc[shopify_data['product_title'] == 'Bestsellers Mystery Box Set', 'product_title'] = 'Special Delivery Discovery Kit'
+shopify_data.loc[shopify_data['product_title'] == 'Baby Cleanse & Hydrate Gift Set', 'product_title'] = 'Cleanse and Hydrate Bundle'
+shopify_data.loc[shopify_data['product_title'] == 'Baby Cleanse and Hydrate Bundle', 'product_title'] = 'Cleanse and Hydrate Bundle'
+shopify_data.loc[shopify_data['product_title'] == 'Baby Cleanse and Hydrate Bundle Set', 'product_title'] = 'Cleanse and Hydrate Bundle'
+shopify_data.loc[shopify_data['product_title'] == 'Baby Cleanse and Hydrate Bundle Set | 3-Piece Set', 'product_title'] = 'Cleanse and Hydrate Bundle'
+shopify_data.loc[shopify_data['product_title'] == 'Baby Cleanse and Hydrate Bundle | 3-Piece Set', 'product_title'] = 'Cleanse and Hydrate Bundle'
+shopify_data.loc[shopify_data['product_title'] == 'Baby Mini Trio', 'product_title'] = 'Baby Mini Trio Set'
+shopify_data.loc[shopify_data['product_title'] == 'Protecting Baby Starter Bundle | Default Title', 'product_title'] = 'Protecting Baby Starter Bundle'
+shopify_data.loc[shopify_data['product_title'] == 'Radiance & Repair Duo | 2-Piece Set', 'product_title'] = 'Radiance & Repair Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Protecting Baby Duo | Fragrance-Free', 'product_title'] = 'Protecting Baby Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Kids After Swim & Sports Shampoo', 'product_title'] = 'Kids Adventure-Ready Set'
+shopify_data.loc[shopify_data['product_title'] == 'Healing Eczema Duo | Fragrance Free', 'product_title'] = 'Healing Eczema Duo'
 shopify_data.loc[shopify_data['product_title'] == 'Jumbo-Sized Soothing Baby Massage Oil', 'product_title'] = 'Jumbo Soothing Baby Massage Oil'
+shopify_data.loc[shopify_data['product_title'] == 'Everyday Active Kids Cleanse & Protect Duo', 'product_title'] = 'Kids Adventure-Ready Set'
+shopify_data.loc[shopify_data['product_title'] == 'Everyday Active Kids Duo', 'product_title'] = 'Kids Adventure-Ready Set'
+shopify_data.loc[shopify_data['product_title'] == 'Dry Skin Relief Duo | Fragrance Free', 'product_title'] = 'Dry Skin Relief Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Baby Cleanse and Nourish Bundle', 'product_title'] = 'Cleanse and Nourish Bundle'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Daily 1-2-3 Routine Set | Cool Peach', 'product_title'] = 'Kids Daily 1-2-3 Routine'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Daily 1-2-3 Routine Set | Fresh Pomelo', 'product_title'] = 'Kids Daily 1-2-3 Routine'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Daily 1-2-3 Routine Set | Melon Juice', 'product_title'] = 'Kids Daily 1-2-3 Routine'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Daily 1-2-3 Routine | Cool Peach', 'product_title'] = 'Kids Daily 1-2-3 Routine'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Daily 1-2-3 Routine | Melon Juice', 'product_title'] = 'Kids Daily 1-2-3 Routine'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Daily SPF20 Face & Lips Duo | 2-Piece Set', 'product_title'] = 'Kids Daily SPF20 Face & Lips Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Face Color Luxe Gift Set | 4-Piece Gift Set', 'product_title'] = 'Kids Face Color Luxe Gift Set'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Fantasy Face Crayon - Electric Rose', 'product_title'] = 'Kids Fantasy Face Crayon'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Fantasy Face Crayon - Gold', 'product_title'] = 'Kids Fantasy Face Crayon'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Fantasy Face Crayon - Ice Queen', 'product_title'] = 'Kids Fantasy Face Crayon'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Fantasy Face Crayon - Ladybug', 'product_title'] = 'Kids Fantasy Face Crayon'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Fantasy Face Crayon - Little Lilac', 'product_title'] = 'Kids Fantasy Face Crayon'
+shopify_data.loc[shopify_data['product_title'] == "Kids Fantasy Face Crayon - Mermaid's Tail", 'product_title'] = 'Kids Fantasy Face Crayon'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Fantasy Face Crayon - Sublime Cocoa', 'product_title'] = 'Kids Fantasy Face Crayon'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Fantasy Face Crayon - Sweet Clementine', 'product_title'] = 'Kids Fantasy Face Crayon'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Fantasy Face Crayon - Unicorn', 'product_title'] = 'Kids Fantasy Face Crayon'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Tinted Lip Oil - Ruby Sheer Red', 'product_title'] = 'Kids Tinted Lip Oil'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Tinted Lip Oil - Sakura Sheer Pink', 'product_title'] = 'Kids Tinted Lip Oil'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Tinted Lip Oil | Sakura - Sheer Pink', 'product_title'] = 'Kids Tinted Lip Oil'
+shopify_data.loc[shopify_data['product_title'] == 'Tri-Water Complete Routine Bundle | 3-Piece Set', 'product_title'] = 'Tri-Water Complete Routine Bundle'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Hair & Skin Starter Set | 3 Piece Set', 'product_title'] = 'Kids Hair & Skin Starter Set'
+shopify_data.loc[shopify_data['product_title'] == 'Mama Must-Have Duo Set', 'product_title'] = 'Mama Must-Have Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Mama Must-Have Duo Set | Damask Rose', 'product_title'] = 'Mama Must-Have Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Nourishing Stretch Mark Cream | 4.0 Fl Oz', 'product_title'] = 'Nourishing Stretch Mark Cream'
+shopify_data.loc[shopify_data['product_title'] == 'Mama & Baby Discovery Set | Discovery Set For Mom & Baby', 'product_title'] = 'Mama & Baby Discovery Set'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Happy Hair Duo Set', 'product_title'] = 'Kids Happy Hair Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Happy Hair Duo Set | 2-Piece Set', 'product_title'] = 'Kids Happy Hair Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Happy Hair Duo | 2-Piece Set', 'product_title'] = 'Kids Happy Hair Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Happy Hair Duo | 2-Piece Set + Free Hair Brush', 'product_title'] = 'Kids Happy Hair Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Happy Hair Day | 3-Piece Set', 'product_title'] = 'Kids Happy Hair Day'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Happy Hair Day Mini Bundle', 'product_title'] = 'Kids Happy Hair Day Mini'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Happy Hair Day Mini Bundle | 3-Piece Set', 'product_title'] = 'Kids Happy Hair Day Mini'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Happy Face Duo | Cool Peach', 'product_title'] = 'Kids Happy Face Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Happy Face Duo | Fresh Pomelo', 'product_title'] = 'Kids Happy Face Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Happy Face Duo | Melon Juice', 'product_title'] = 'Kids Happy Face Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Body Lotion Fresh Pomelo | 6.8 Fl. Oz.', 'product_title'] = 'Kids Multi-Vitamin Body Lotion'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Body Lotion Peach - Mini', 'product_title'] = 'Kids Multi-Vitamin Body Lotion Mini'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Body Wash Cool Peach - Mini', 'product_title'] = 'Kids Multi-Vitamin Body Wash'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Body Wash Peach - Mini', 'product_title'] = 'Kids Multi-Vitamin Body Wash Mini'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Face Wash | Cool Peach', 'product_title'] = 'Kids Multi-Vitamin Face Wash'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Face Wash | Fresh Pomelo', 'product_title'] = 'Kids Multi-Vitamin Face Wash'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Face Wash | Melon Juice', 'product_title'] = 'Kids Multi-Vitamin Face Wash'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Face Cream Cool Peach - Mini', 'product_title'] = 'Kids Multi-Vitamin Face Cream Mini'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Multi-Vitamin Face Wash Mini - Mleon', 'product_title'] = 'Kids Multi-Vitamin Face Wash Mini'
+shopify_data.loc[shopify_data['product_title'] == 'Kids SPF Duo | 2-Piece Set', 'product_title'] = 'Kids SPF Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Kids Healthy Morning Duo | 2-Piece Set', 'product_title'] = 'Kids Healthy Morning Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Family Essential SPF Duo | 2-Piece Set', 'product_title'] = 'Family Essential SPF Duo'
+shopify_data.loc[shopify_data['product_title'] == 'Mini Kids Happy Face Duo', 'product_title'] = 'Kids Happy Face Duo Mini'
+shopify_data.loc[shopify_data['product_title'] == 'Mini Kids Happy Hair Duo', 'product_title'] = 'Kids Happy Hair Duo Mini'
+shopify_data.loc[shopify_data['product_title'] == 'Travel-Size Kids Face Cream Melon Juice 10 ml', 'product_title'] = 'Kids Face Cream Mini'
+shopify_data.loc[shopify_data['product_title'] == 'Travel-Size Nourishing Baby Face Cream 10 ml', 'product_title'] = 'Nourishing Baby Face Cream Mini'
 
 
 # In[3]:
